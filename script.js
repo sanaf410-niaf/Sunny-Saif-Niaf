@@ -33,20 +33,41 @@ function updateTimer() {
 setInterval(updateTimer, 1000); 
 updateTimer(); 
 
-// --- 2. LIBRARY CARD CHECKER ---
+// --- 2. LIBRARY CARD CHECKER (STRICT 14-DIGIT PATTERN) ---
 function checkLibraryCard() {
-    const input = document.getElementById('card-id-input').value;
+    // 1. Get the elements
+    const input = document.getElementById('card-id-input');
     const msg = document.getElementById('card-status-msg');
     
-    // Logic: If ID is longer than 5 digits, it's valid
-    if(input.length > 5) {
-        msg.style.color = "green";
-        msg.innerText = "✅ Card Active: You can borrow books.";
-    } else {
+    // 2. Get the value and remove spaces
+    const val = input.value.trim();
+
+    // CHECK 1: Is it empty?
+    if (val === "") {
         msg.style.color = "red";
-        msg.innerText = "❌ Invalid ID or Card not found.";
+        msg.innerText = "❌ Please enter an ID.";
+        return;
     }
-}
+
+    // CHECK 2: Is it only numbers?
+    if (isNaN(val)) {
+        msg.style.color = "red";
+        msg.innerText = "❌ Invalid: ID must be numbers only.";
+        return;
+    }
+
+    // CHECK 3: Is it EXACTLY 14 digits?
+    // The ID you gave (04325105101093) has 14 digits.
+    if (val.length !== 14) {
+        msg.style.color = "red";
+        msg.innerText = `❌ Invalid: ID must be exactly 14 digits. (You typed ${val.length})`;
+        return;
+    }
+
+    // --- SUCCESS ---
+    msg.style.color = "green";
+    msg.innerText = "✅ Card Active: You can borrow books.";
+            }
 
 // --- 3. SEARCH BAR LOGIC ---
 function searchTable(inputElement) {
@@ -67,3 +88,4 @@ function searchTable(inputElement) {
         }
     });
 }
+
